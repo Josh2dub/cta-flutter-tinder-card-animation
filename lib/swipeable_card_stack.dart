@@ -137,8 +137,7 @@ class _CardsSectionState extends State<SwipeableCardsSection> with SingleTickerP
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: IgnorePointer(
+    return IgnorePointer(
       ignoring: !enableSwipe,
       child: Stack(
         children: <Widget>[
@@ -191,7 +190,7 @@ class _CardsSectionState extends State<SwipeableCardsSection> with SingleTickerP
               : Container(),
         ],
       ),
-    ));
+    );
   }
 
   Widget backCard() {
