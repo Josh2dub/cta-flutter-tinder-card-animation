@@ -7,11 +7,7 @@ import 'package:swipeable_card_stack/swipe_controller.dart';
 
 export './swipe_controller.dart';
 
-const List<Alignment> cardsAlign = [
-  Alignment(0.0, 1.0),
-  Alignment(0.0, 0.8),
-  Alignment(0.0, 0.0)
-];
+const List<Alignment> cardsAlign = [Alignment(0.0, 1.0), Alignment(0.0, 0.8), Alignment(0.0, 0.0)];
 List<Size> cardsSize = List.filled(3, Size(1, 1));
 
 class SwipeableCardsSection extends StatefulWidget {
@@ -46,20 +42,16 @@ class SwipeableCardsSection extends StatefulWidget {
     this.enableSwipeUp = true,
     this.enableSwipeDown = true,
   }) {
-    cardsSize[0] = Size(MediaQuery.of(context).size.width * cardWidthTopMul,
-        MediaQuery.of(context).size.height * cardHeightTopMul);
-    cardsSize[1] = Size(MediaQuery.of(context).size.width * cardWidthMiddleMul,
-        MediaQuery.of(context).size.height * cardHeightMiddleMul);
-    cardsSize[2] = Size(MediaQuery.of(context).size.width * cardWidthBottomMul,
-        MediaQuery.of(context).size.height * cardHeightBottomMul);
+    cardsSize[0] = const Size(335, 250);
+    cardsSize[1] = const Size(335, 250);
+    cardsSize[2] = const Size(335, 250);
   }
 
   @override
   _CardsSectionState createState() => _CardsSectionState();
 }
 
-class _CardsSectionState extends State<SwipeableCardsSection>
-    with SingleTickerProviderStateMixin {
+class _CardsSectionState extends State<SwipeableCardsSection> with SingleTickerProviderStateMixin {
   int cardsCounter = 0;
   int index = 0;
   Widget? appendCard;
@@ -136,8 +128,7 @@ class _CardsSectionState extends State<SwipeableCardsSection>
     frontCardAlign = cardsAlign[2];
 
     // Init the animation controller
-    _controller =
-        AnimationController(duration: Duration(milliseconds: 700), vsync: this);
+    _controller = AnimationController(duration: Duration(milliseconds: 700), vsync: this);
     _controller.addListener(() => setState(() {}));
     _controller.addStatusListener((AnimationStatus status) {
       if (status == AnimationStatus.completed) changeCardsOrder();
@@ -163,14 +154,8 @@ class _CardsSectionState extends State<SwipeableCardsSection>
                     // Add what the user swiped in the last frame to the alignment of the card
                     setState(() {
                       frontCardAlign = Alignment(
-                          frontCardAlign.x +
-                              20 *
-                                  details.delta.dx /
-                                  MediaQuery.of(context).size.width,
-                          frontCardAlign.y +
-                              20 *
-                                  details.delta.dy /
-                                  MediaQuery.of(context).size.height);
+                          frontCardAlign.x + 20 * details.delta.dx / MediaQuery.of(context).size.width,
+                          frontCardAlign.y + 20 * details.delta.dy / MediaQuery.of(context).size.height);
 
                       frontCardRot = frontCardAlign.x; // * rotation speed;
                     });
@@ -178,23 +163,16 @@ class _CardsSectionState extends State<SwipeableCardsSection>
                   // When releasing the first card
                   onPanEnd: (_) {
                     // If the front card was swiped far enough to count as swiped
-                    final onCardSwiped =
-                        widget.onCardSwiped ?? (_, __, ___) => true;
+                    final onCardSwiped = widget.onCardSwiped ?? (_, __, ___) => true;
                     bool? shouldAnimate = false;
                     if (frontCardAlign.x > 3.0) {
-                      shouldAnimate =
-                          onCardSwiped(Direction.right, index, cards[0]);
+                      shouldAnimate = onCardSwiped(Direction.right, index, cards[0]);
                     } else if (frontCardAlign.x < -3.0) {
-                      shouldAnimate =
-                          onCardSwiped(Direction.left, index, cards[0]);
-                    } else if (frontCardAlign.y < -3.0 &&
-                        widget.enableSwipeUp) {
-                      shouldAnimate =
-                          onCardSwiped(Direction.up, index, cards[0]);
-                    } else if (frontCardAlign.y > 3.0 &&
-                        widget.enableSwipeDown) {
-                      shouldAnimate =
-                          onCardSwiped(Direction.down, index, cards[0]);
+                      shouldAnimate = onCardSwiped(Direction.left, index, cards[0]);
+                    } else if (frontCardAlign.y < -3.0 && widget.enableSwipeUp) {
+                      shouldAnimate = onCardSwiped(Direction.up, index, cards[0]);
+                    } else if (frontCardAlign.y > 3.0 && widget.enableSwipeDown) {
+                      shouldAnimate = onCardSwiped(Direction.down, index, cards[0]);
                     } else {
                       // Return to the initial rotation and alignment
                       setState(() {
@@ -222,9 +200,7 @@ class _CardsSectionState extends State<SwipeableCardsSection>
           ? CardsAnimation.backCardAlignmentAnim(_controller).value
           : cardsAlign[0],
       child: SizedBox.fromSize(
-          size: _controller.status == AnimationStatus.forward
-              ? CardsAnimation.backCardSizeAnim(_controller).value
-              : cardsSize[2],
+          size: const Size(335, 250), // Use fixed size
           child: cards[2]),
     );
   }
@@ -235,9 +211,7 @@ class _CardsSectionState extends State<SwipeableCardsSection>
           ? CardsAnimation.middleCardAlignmentAnim(_controller).value
           : cardsAlign[1],
       child: SizedBox.fromSize(
-          size: _controller.status == AnimationStatus.forward
-              ? CardsAnimation.middleCardSizeAnim(_controller).value
-              : cardsSize[1],
+          size: const Size(335, 250), // Use fixed size
           child: cards[1]),
     );
   }
@@ -245,13 +219,14 @@ class _CardsSectionState extends State<SwipeableCardsSection>
   Widget frontCard() {
     return Align(
         alignment: _controller.status == AnimationStatus.forward
-            ? CardsAnimation.frontCardDisappearAlignmentAnim(
-                    _controller, frontCardAlign)
-                .value
+            ? CardsAnimation.frontCardDisappearAlignmentAnim(_controller, frontCardAlign).value
             : frontCardAlign,
         child: Transform.rotate(
           angle: (pi / 180.0) * frontCardRot,
-          child: SizedBox.fromSize(size: cardsSize[0], child: cards[0]),
+          child: SizedBox.fromSize(
+            size: const Size(335, 250), // Use fixed size
+            child: cards[0],
+          ),
         ));
   }
 
@@ -279,57 +254,41 @@ class _CardsSectionState extends State<SwipeableCardsSection>
 }
 
 class CardsAnimation {
-  static Animation<Alignment> backCardAlignmentAnim(
-      AnimationController parent) {
-    return AlignmentTween(begin: cardsAlign[0], end: cardsAlign[1]).animate(
-        CurvedAnimation(
-            parent: parent, curve: Interval(0.4, 0.7, curve: Curves.easeIn)));
+  static Animation<Alignment> backCardAlignmentAnim(AnimationController parent) {
+    return AlignmentTween(begin: cardsAlign[0], end: cardsAlign[1])
+        .animate(CurvedAnimation(parent: parent, curve: Interval(0.4, 0.7, curve: Curves.easeIn)));
   }
 
   static Animation<Size?> backCardSizeAnim(AnimationController parent) {
-    return SizeTween(begin: cardsSize[2], end: cardsSize[1]).animate(
-        CurvedAnimation(
-            parent: parent, curve: Interval(0.4, 0.7, curve: Curves.easeIn)));
+    return SizeTween(begin: cardsSize[2], end: cardsSize[1])
+        .animate(CurvedAnimation(parent: parent, curve: Interval(0.4, 0.7, curve: Curves.easeIn)));
   }
 
-  static Animation<Alignment> middleCardAlignmentAnim(
-      AnimationController parent) {
-    return AlignmentTween(begin: cardsAlign[1], end: cardsAlign[2]).animate(
-        CurvedAnimation(
-            parent: parent, curve: Interval(0.2, 0.5, curve: Curves.easeIn)));
+  static Animation<Alignment> middleCardAlignmentAnim(AnimationController parent) {
+    return AlignmentTween(begin: cardsAlign[1], end: cardsAlign[2])
+        .animate(CurvedAnimation(parent: parent, curve: Interval(0.2, 0.5, curve: Curves.easeIn)));
   }
 
   static Animation<Size?> middleCardSizeAnim(AnimationController parent) {
-    return SizeTween(begin: cardsSize[1], end: cardsSize[0]).animate(
-        CurvedAnimation(
-            parent: parent, curve: Interval(0.2, 0.5, curve: Curves.easeIn)));
+    return SizeTween(begin: cardsSize[1], end: cardsSize[0])
+        .animate(CurvedAnimation(parent: parent, curve: Interval(0.2, 0.5, curve: Curves.easeIn)));
   }
 
-  static Animation<Alignment> frontCardDisappearAlignmentAnim(
-      AnimationController parent, Alignment beginAlign) {
-    if (beginAlign.x == -0.001 ||
-        beginAlign.x == 0.001 ||
-        beginAlign.x > 3.0 ||
-        beginAlign.x < -3.0) {
+  static Animation<Alignment> frontCardDisappearAlignmentAnim(AnimationController parent, Alignment beginAlign) {
+    if (beginAlign.x == -0.001 || beginAlign.x == 0.001 || beginAlign.x > 3.0 || beginAlign.x < -3.0) {
       return AlignmentTween(
               begin: beginAlign,
               end: Alignment(
-                  beginAlign.x > 0 ? beginAlign.x + 30.0 : beginAlign.x - 30.0,
-                  0.0) // Has swiped to the left or right?
+                  beginAlign.x > 0 ? beginAlign.x + 30.0 : beginAlign.x - 30.0, 0.0) // Has swiped to the left or right?
               )
-          .animate(CurvedAnimation(
-              parent: parent, curve: Interval(0.0, 0.5, curve: Curves.easeIn)));
+          .animate(CurvedAnimation(parent: parent, curve: Interval(0.0, 0.5, curve: Curves.easeIn)));
     } else {
       return AlignmentTween(
               begin: beginAlign,
               end: Alignment(
-                  0.0,
-                  beginAlign.y > 0
-                      ? beginAlign.y + 30.0
-                      : beginAlign.y - 30.0) // Has swiped to the top or bottom?
+                  0.0, beginAlign.y > 0 ? beginAlign.y + 30.0 : beginAlign.y - 30.0) // Has swiped to the top or bottom?
               )
-          .animate(CurvedAnimation(
-              parent: parent, curve: Interval(0.0, 0.5, curve: Curves.easeIn)));
+          .animate(CurvedAnimation(parent: parent, curve: Interval(0.0, 0.5, curve: Curves.easeIn)));
     }
   }
 }
