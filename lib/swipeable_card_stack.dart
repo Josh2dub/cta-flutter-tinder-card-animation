@@ -194,12 +194,12 @@ class _CardsSectionState extends State<SwipeableCardsSection> with SingleTickerP
   }
 
   Widget backCard() {
-    return Align(
-      alignment: _controller.status == AnimationStatus.forward
-          ? CardsAnimation.backCardAlignmentAnim(_controller).value
-          : cardsAlign[0],
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Align(
+        alignment: _controller.status == AnimationStatus.forward
+            ? CardsAnimation.backCardAlignmentAnim(_controller).value
+            : cardsAlign[0],
         child: AspectRatio(
             aspectRatio: 335 / 250, // Use fixed size
             child: cards[2]),
@@ -208,12 +208,12 @@ class _CardsSectionState extends State<SwipeableCardsSection> with SingleTickerP
   }
 
   Widget middleCard() {
-    return Align(
-      alignment: _controller.status == AnimationStatus.forward
-          ? CardsAnimation.middleCardAlignmentAnim(_controller).value
-          : cardsAlign[1],
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Align(
+        alignment: _controller.status == AnimationStatus.forward
+            ? CardsAnimation.middleCardAlignmentAnim(_controller).value
+            : cardsAlign[1],
         child: AspectRatio(
             aspectRatio: 335 / 250, // Use fixed size
             child: cards[1]),
@@ -222,20 +222,21 @@ class _CardsSectionState extends State<SwipeableCardsSection> with SingleTickerP
   }
 
   Widget frontCard() {
-    return Align(
+    return Transform.rotate(
+      angle: (pi / 180.0) * frontCardRot,
+      child: Align(
         alignment: _controller.status == AnimationStatus.forward
             ? CardsAnimation.frontCardDisappearAlignmentAnim(_controller, frontCardAlign).value
             : frontCardAlign,
-        child: Transform.rotate(
-          angle: (pi / 180.0) * frontCardRot,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: AspectRatio(
-              aspectRatio: 335 / 250, // Use fixed size
-              child: cards[0],
-            ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: AspectRatio(
+            aspectRatio: 335 / 250, // Use fixed size
+            child: cards[0],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   void changeCardsOrder() {
