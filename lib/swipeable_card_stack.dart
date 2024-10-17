@@ -42,9 +42,12 @@ class SwipeableCardsSection extends StatefulWidget {
     this.enableSwipeUp = true,
     this.enableSwipeDown = true,
   }) {
-    cardsSize[0] = const Size(335, 250);
-    cardsSize[1] = const Size(335, 250);
-    cardsSize[2] = const Size(335, 250);
+    cardsSize[0] = Size(
+        MediaQuery.of(context).size.width * cardWidthTopMul, MediaQuery.of(context).size.height * cardHeightTopMul);
+    cardsSize[1] = Size(MediaQuery.of(context).size.width * cardWidthMiddleMul,
+        MediaQuery.of(context).size.height * cardHeightMiddleMul);
+    cardsSize[2] = Size(MediaQuery.of(context).size.width * cardWidthBottomMul,
+        MediaQuery.of(context).size.height * cardHeightBottomMul);
   }
 
   @override
@@ -199,7 +202,9 @@ class _CardsSectionState extends State<SwipeableCardsSection> with SingleTickerP
           ? CardsAnimation.backCardAlignmentAnim(_controller).value
           : cardsAlign[0],
       child: SizedBox.fromSize(
-          size: const Size(335, 250), // Use fixed size
+          size: _controller.status == AnimationStatus.forward
+              ? CardsAnimation.backCardSizeAnim(_controller).value
+              : cardsSize[2],
           child: cards[2]),
     );
   }
@@ -210,7 +215,9 @@ class _CardsSectionState extends State<SwipeableCardsSection> with SingleTickerP
           ? CardsAnimation.middleCardAlignmentAnim(_controller).value
           : cardsAlign[1],
       child: SizedBox.fromSize(
-          size: const Size(335, 250), // Use fixed size
+          size: _controller.status == AnimationStatus.forward
+              ? CardsAnimation.middleCardSizeAnim(_controller).value
+              : cardsSize[1],
           child: cards[1]),
     );
   }
@@ -222,10 +229,7 @@ class _CardsSectionState extends State<SwipeableCardsSection> with SingleTickerP
             : frontCardAlign,
         child: Transform.rotate(
           angle: (pi / 180.0) * frontCardRot,
-          child: SizedBox.fromSize(
-            size: const Size(335, 250), // Use fixed size
-            child: cards[0],
-          ),
+          child: SizedBox.fromSize(size: cardsSize[0], child: cards[0]),
         ));
   }
 
